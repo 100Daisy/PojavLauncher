@@ -29,7 +29,8 @@
             android:name="android.max_aspect"
             android:value="ratio_float"/>
 		
-        <activity android:name=".InstallModpack">
+        <activity android:name=".InstallModpack"
+            android:exported="true">
           <intent-filter>
                 <action android:name="android.intent.action.SEND" />
                 <category android:name="android.intent.category.DEFAULT" />

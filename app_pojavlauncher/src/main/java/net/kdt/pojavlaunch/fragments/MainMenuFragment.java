@@ -31,6 +31,7 @@ public class MainMenuFragment extends Fragment {
         Button mNewsButton = view.findViewById(R.id.news_button);
         Button mCustomControlButton = view.findViewById(R.id.custom_control_button);
         Button mInstallJarButton = view.findViewById(R.id.install_jar_button);
+        Button mInstallModpackButton = view.findViewById(R.id.install_modpack_button);
 
         ImageButton mEditProfileButton = view.findViewById(R.id.edit_profile_button);
         Button mPlayButton = view.findViewById(R.id.play_button);
@@ -42,6 +43,7 @@ public class MainMenuFragment extends Fragment {
             runInstallerWithConfirmation(true);
             return true;
         });
+        mInstallModpackButton.setOnClickListener(v -> runModpackInstaller());
         mEditProfileButton.setOnClickListener(v -> Tools.swapFragment(requireActivity(), ProfileEditorFragment.class, ProfileEditorFragment.TAG, true, null));
 
         mPlayButton.setOnClickListener(v -> ExtraCore.setValue(ExtraConstants.LAUNCH_GAME, true));
@@ -50,6 +52,12 @@ public class MainMenuFragment extends Fragment {
     private void runInstallerWithConfirmation(boolean isCustomArgs) {
         if (ProgressKeeper.getTaskCount() == 0)
             Tools.installMod(requireActivity(), isCustomArgs);
+        else
+            Toast.makeText(requireContext(), R.string.tasks_ongoing, Toast.LENGTH_LONG).show();
+    }
+    private void runModpackInstaller() {
+        if (ProgressKeeper.getTaskCount() == 0)
+            Tools.installModpack(requireActivity());
         else
             Toast.makeText(requireContext(), R.string.tasks_ongoing, Toast.LENGTH_LONG).show();
     }

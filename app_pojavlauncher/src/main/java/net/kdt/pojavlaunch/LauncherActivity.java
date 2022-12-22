@@ -209,6 +209,10 @@ public class LauncherActivity extends BaseActivity {
             Tools.launchModInstaller(this, data);
             return;
         }
+        if(requestCode == Tools.RUN_MODPACK_INSTALLER && data != null){
+            Tools.launchModpackInstaller(this, data);
+            return;
+        }
         if(requestCode == MultiRTConfigDialog.MULTIRT_PICK_RUNTIME && data != null){
             Tools.installRuntimeFromUri(this, data.getData());
         }

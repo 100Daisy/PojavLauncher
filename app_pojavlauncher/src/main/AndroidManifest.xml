@@ -83,7 +83,12 @@
             android:screenOrientation="sensorLandscape"
             android:name=".JavaGUILauncherActivity"
             android:configChanges="keyboardHidden|orientation|screenSize|keyboard|navigation"/>
-		
+
+        <activity
+            android:screenOrientation="portrait"
+            android:name=".ModpackInstaller"
+            android:configChanges="keyboardHidden|orientation|screenSize|keyboard|navigation"/>
+
         <activity
             android:screenOrientation="sensorLandscape"
             android:name=".CustomControlsActivity"

@@ -44,6 +44,16 @@
 		app:layout_constraintTop_toBottomOf="@id/custom_control_button"
 		/>
 
+	<com.kdt.mcgui.LauncherMenuButton
+		android:id="@+id/install_modpack_button"
+		android:layout_width="match_parent"
+		android:layout_height="@dimen/_66sdp"
+		android:layout_marginBottom="307dp"
+		android:background="?android:attr/selectableItemBackground"
+		android:drawableStart="@drawable/ic_menu_install_jar"
+
+		android:text="@string/install_modpack"
+		app:layout_constraintBottom_toTopOf="@+id/mc_version_spinner" />
 
 	<com.kdt.mcgui.mcVersionSpinner
 		android:id="@+id/mc_version_spinner"

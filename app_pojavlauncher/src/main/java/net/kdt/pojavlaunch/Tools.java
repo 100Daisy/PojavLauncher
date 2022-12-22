@@ -84,6 +84,7 @@ public final class Tools {
 
     public static final String LIBNAME_OPTIFINE = "optifine:OptiFine";
     public static final int RUN_MOD_INSTALLER = 2050;
+    public static final int RUN_MODPACK_INSTALLER = 2051;
 
     /**
      * Since some constant requires the use of the Context object
@@ -962,6 +963,15 @@ public final class Tools {
         fragmentActivity.getSupportFragmentManager().popBackStackImmediate();
     }
 
+    public static void installModpack(Activity activity) {
+        Intent intent = new Intent(Intent.ACTION_OPEN_DOCUMENT);
+        intent.addCategory(Intent.CATEGORY_OPENABLE);
+        String mimeType = MimeTypeMap.getSingleton().getMimeTypeFromExtension("mrpack");
+        if(mimeType == null) mimeType = "*/*";
+        intent.setType(mimeType);
+        activity.startActivityForResult(intent, RUN_MOD_INSTALLER);
+        return;
+    }
     public static void installMod(Activity activity, boolean customJavaArgs) {
         if (MultiRTUtils.getExactJreName(8) == null) {
             Toast.makeText(activity, R.string.multirt_nojava8rt, Toast.LENGTH_LONG).show();
@@ -1007,6 +1017,29 @@ public final class Tools {
         return barrier;
     }
 
+    public static void launchModpackInstaller(Activity activity, @NonNull Intent data) {
+        final ProgressDialog alertDialog = getWaitingDialog(activity);
+        final Uri uri = data.getData();
+        alertDialog.setMessage(activity.getString(R.string.multirt_progress_caching));
+
+        sExecutorService.execute(() -> {
+            try {
+                final String name = getFileName(activity, uri);
+                final File modInstallerFile = new File(activity.getCacheDir(), name);
+                FileOutputStream fos = new FileOutputStream(modInstallerFile);
+                IOUtils.copy(activity.getContentResolver().openInputStream(uri), fos);
+                fos.close();
+                activity.runOnUiThread(() -> {
+                    alertDialog.dismiss();
+                    Intent intent = new Intent(activity, JavaGUILauncherActivity.class);
+                    intent.putExtra("mrpackFile", modInstallerFile);
+                    activity.startActivity(intent);
+                });
+            }catch(IOException e) {
+                Tools.showError(activity, e);
+            }
+        });
+    }
     /** Copy the mod file, and launch the mod installer activity */
     public static void launchModInstaller(Activity activity, @NonNull Intent data){
         final ProgressDialog alertDialog = getWaitingDialog(activity);
@@ -1022,7 +1055,7 @@ public final class Tools {
                 fos.close();
                 activity.runOnUiThread(() -> {
                     alertDialog.dismiss();
-                    Intent intent = new Intent(activity, JavaGUILauncherActivity.class);
+                    Intent intent = new Intent(activity, ModpackInstaller.class);
                     intent.putExtra("modFile", modInstallerFile);
                     activity.startActivity(intent);
                 });

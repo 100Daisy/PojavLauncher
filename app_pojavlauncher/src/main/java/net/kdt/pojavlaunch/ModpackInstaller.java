@@ -54,7 +54,7 @@ public class ModpackInstaller extends BaseActivity {
                     }
                     // Parse the JSON string into a JSON object
                     JSONObject json = new JSONObject(jsonStringBuilder.toString());
-                    String modpackName = "slot1";
+                    String modpackName = ".minecraft";
                     // Do something with the JSON object
                     JSONObject dependencies =  json.getJSONObject("dependencies");
                     Log.d("Modpack", String.valueOf(dependencies));

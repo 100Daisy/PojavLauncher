@@ -1,5 +1,9 @@
 package net.kdt.pojavlaunch;
 
+import static net.kdt.pojavlaunch.MainActivity.INTENT_MINECRAFT_VERSION;
+import static net.kdt.pojavlaunch.value.launcherprofiles.LauncherProfiles.launcherProfilesFile;
+
+import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
@@ -7,6 +11,11 @@ import android.util.Log;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
+
+import net.kdt.pojavlaunch.tasks.AsyncMinecraftDownloader;
+import net.kdt.pojavlaunch.value.launcherprofiles.LauncherProfiles;
+import net.kdt.pojavlaunch.value.launcherprofiles.MinecraftLauncherProfiles;
+import net.kdt.pojavlaunch.value.launcherprofiles.MinecraftProfile;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -60,7 +69,23 @@ public class ModpackInstaller extends BaseActivity {
                     Log.d("Modpack", String.valueOf(dependencies));
                     if (dependencies.has("fabric-loader")) {
                         Object value = dependencies.get("fabric-loader");
-                        Object value2 = dependencies.get("minecraft");
+                        String value2 = String.valueOf(dependencies.get("minecraft"));
+                        JMinecraftVersionList.Version mcVersion = AsyncMinecraftDownloader.getListedVersion(value2);
+                        new AsyncMinecraftDownloader(this, mcVersion, value2, () -> runOnUiThread(() -> {
+                            try {
+                                MinecraftProfile profile = MinecraftProfile.createTemplate();
+                                profile.name = "Modden";
+                                addProfile(profile);
+                                Intent mainIntent = new Intent(getBaseContext(), MainActivity.class);
+                                mainIntent.putExtra(INTENT_MINECRAFT_VERSION, value2);
+                                mainIntent.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
+                                startActivity(mainIntent);
+                                finish();
+                                android.os.Process.killProcess(android.os.Process.myPid()); //You should kill yourself, NOW!
+                            } catch (Throwable e) {
+                                Tools.showError(getBaseContext(), e);
+                            }
+                        }));
                         Log.d("xdDXdsadasdasds", String.valueOf(value));
                         Path directory = Paths.get(Tools.DIR_GAME_HOME, ".minecraft", "versions", String.format("fabric-loader-%s-%s", value, value2));
                         Files.createDirectories(directory);
@@ -77,6 +102,18 @@ public class ModpackInstaller extends BaseActivity {
                 entry = zipInputStream.getNextEntry();
             }
         } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    public static void addProfile(MinecraftProfile profile) {
+        try {
+            // Update the mainProfileJson object
+            MinecraftLauncherProfiles mainProfileJson = LauncherProfiles.update();
+            mainProfileJson.profiles.put(profile.name, profile);
+            // Write the updated mainProfileJson object to the launcher_profiles.json file
+            Tools.write(launcherProfilesFile.getAbsolutePath(), mainProfileJson.toJson());
+        } catch (IOException e) {
             e.printStackTrace();
         }
     }

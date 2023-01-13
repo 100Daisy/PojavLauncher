@@ -36,6 +36,8 @@ public class ProgressLayout extends ConstraintLayout implements View.OnClickList
     public static final String DOWNLOAD_VERSION_LIST = "download_verlist";
     public static final String AUTHENTICATE_MICROSOFT = "authenticate_microsoft";
     public static final String INSTALL_MODPACK = "install_modpack";
+    public static final String DOWNLOAD_MODLOADER = "install_modpack";
+    public static final String DOWNLOAD_MOD = "install_modpack";
 
     public ProgressLayout(@NonNull Context context) {
         super(context);

@@ -1,7 +1,5 @@
 package net.kdt.pojavlaunch;
 
-import static net.kdt.pojavlaunch.ModpackInstaller.downloadFiles;
-
 import android.os.AsyncTask;
 import android.util.Log;
 

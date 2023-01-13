@@ -1,4 +1,4 @@
-package net.kdt.pojavlaunch.fragments;
+package net.kdt.pojavlaunch.progresskeeper.fragments;
 
 import static net.kdt.pojavlaunch.extra.ExtraCore.getValue;
 import static net.kdt.pojavlaunch.profiles.ProfileAdapter.CREATE_PROFILE_MAGIC;

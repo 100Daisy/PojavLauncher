@@ -1,4 +1,4 @@
-package net.kdt.pojavlaunch.fragments;
+package net.kdt.pojavlaunch.progresskeeper.fragments;
 
 import android.app.AlertDialog;
 import android.os.Build;

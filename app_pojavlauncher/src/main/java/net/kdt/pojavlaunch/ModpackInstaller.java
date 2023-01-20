@@ -40,6 +40,8 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.Executor;
+import java.util.concurrent.Executors;
 import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
 import java.util.zip.ZipEntry;
@@ -75,9 +77,7 @@ public class ModpackInstaller extends BaseActivity {
                     JSONObject dependencies =  json.getJSONObject("dependencies");
                     Log.d("Modpack", String.valueOf(dependencies));
                     if (dependencies.has("fabric-loader")) {
-
                         value = dependencies.get("fabric-loader");
-
                         value2 = String.valueOf(dependencies.get("minecraft"));
                         JMinecraftVersionList.Version mcVersion = AsyncMinecraftDownloader.getListedVersion(value2);
                         new AsyncMinecraftDownloader(this, mcVersion, value2, () -> runOnUiThread(() -> {
@@ -123,7 +123,6 @@ public class ModpackInstaller extends BaseActivity {
         // Get the "files" array from the JSON object
         JSONArray files = json.getJSONArray("files");
         maxMods += files.length();
-
 
         // Iterate through the "files" array and download each file using AsyncTask
         for (int i = 0; i < files.length(); i++) {

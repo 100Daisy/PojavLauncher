@@ -163,8 +163,6 @@ public class LauncherActivity extends BaseActivity {
         });
 
         mProgressLayout.observe(ProgressLayout.DOWNLOAD_MINECRAFT);
-        mProgressLayout.observe(ProgressLayout.DOWNLOAD_MODLOADER);
-        mProgressLayout.observe(ProgressLayout.DOWNLOAD_MOD);
         mProgressLayout.observe(ProgressLayout.UNPACK_RUNTIME);
         mProgressLayout.observe(ProgressLayout.INSTALL_MODPACK);
         mProgressLayout.observe(ProgressLayout.AUTHENTICATE_MICROSOFT);

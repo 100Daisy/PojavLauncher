@@ -3,6 +3,10 @@ package net.kdt.pojavlaunch;
 import android.os.AsyncTask;
 import android.util.Log;
 
+import com.kdt.mcgui.ProgressLayout;
+
+import net.kdt.pojavlaunch.utils.DownloadUtils;
+
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
 import java.io.BufferedReader;
@@ -42,7 +46,8 @@ public class LibraryDownloader {
             Path directory = Paths.get(Tools.DIR_GAME_HOME, ".minecraft", "libraries", String.valueOf(path), artifactId, version);
             Log.d("TEST", String.valueOf(directory));
             Files.createDirectories(directory);
-            new DownloadTask().execute(url, directory + "/" + artifactId + "-" + version + ".jar");
+            DownloadTask dltask = new DownloadTask();
+            dltask.execute(url, directory + "/" + artifactId + "-" + version + ".jar");
             }
         }
     private static class DownloadTask extends AsyncTask<String, Void, Void> {
@@ -50,18 +55,11 @@ public class LibraryDownloader {
         protected Void doInBackground(String... params) {
             String fileUrl = params[0];
             String filePath = params[1];
+            String[] nameComponents = filePath.split("/");
             try {
-                // Download the file and save it to the "mods" folder
-                URL url = new URL(fileUrl);
-                BufferedInputStream in = new BufferedInputStream(url.openStream());
-                BufferedOutputStream out = new BufferedOutputStream(new FileOutputStream(filePath));
-                byte[] buffer = new byte[1024];
-                int numRead;
-                while ((numRead = in.read(buffer)) != -1) {
-                    out.write(buffer, 0, numRead);
-                }
-                in.close();
-                out.close();
+                DownloadUtils.downloadFileMonitored(fileUrl, filePath, new byte[1024], (curr, max) -> {
+                    ProgressLayout.setProgress(ProgressLayout.INSTALL_MODPACK,(curr * 100)/max, String.format("Downloading Library: %s", nameComponents[nameComponents.length-1]));
+                });
             } catch (IOException e) {
                 e.printStackTrace();
             }
